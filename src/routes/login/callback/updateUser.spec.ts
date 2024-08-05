@@ -50,7 +50,9 @@ const insertRandomConversations = async (count: number) => {
 			embeddingModel: defaultEmbeddingModel.id,
 			createdAt: new Date(),
 			updatedAt: new Date(),
+			lastActivityAt: new Date(),
 			sessionId: locals.sessionId,
+			shared: false,
 		}))
 	);
 
