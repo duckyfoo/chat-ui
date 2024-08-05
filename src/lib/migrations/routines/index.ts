@@ -8,6 +8,7 @@ import updateMessageUpdates from "./04-update-message-updates";
 import updateMessageFiles from "./05-update-message-files";
 import trimMessageUpdates from "./06-trim-message-updates";
 import updateConversationsSharedBool from "./91-update-conversations-shared-bool";
+import updateConversationsLastActivityAt from "./92-update-conversations-lastactivityat";
 
 import resetTools from "./07-reset-tools-in-settings";
 
@@ -29,6 +30,6 @@ export const migrations: Migration[] = [
 	updateMessageFiles,
 	trimMessageUpdates,
 	updateConversationsSharedBool,
-
+	updateConversationsLastActivityAt,
 	resetTools,
 ];

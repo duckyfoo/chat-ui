@@ -42,6 +42,8 @@
 	$: currentConversation = conversations.find(conv => conv.id === currentConversationId);
 	$: if (currentConversation) {
 		activeTab.set(currentConversation.shared ? 'shared' : 'private');
+	} else {
+		activeTab.set('public');
 	}
 	
 	$: filteredConversations = 
@@ -50,14 +52,14 @@
 		publicConversations;
 	
 	$: groupedConversations = {
-		today: filteredConversations.filter(({ updatedAt }) => updatedAt.getTime() > dateRanges[0]),
+		today: filteredConversations.filter(({ lastActivityAt }) => lastActivityAt.getTime() > dateRanges[0]),
 		week: filteredConversations.filter(
-		({ updatedAt }) => updatedAt.getTime() > dateRanges[1] && updatedAt.getTime() < dateRanges[0]
+		({ lastActivityAt }) => lastActivityAt.getTime() > dateRanges[1] && lastActivityAt.getTime() < dateRanges[0]
 		),
 		month: filteredConversations.filter(
-		({ updatedAt }) => updatedAt.getTime() > dateRanges[2] && updatedAt.getTime() < dateRanges[1]
+		({ lastActivityAt }) => lastActivityAt.getTime() > dateRanges[2] && lastActivityAt.getTime() < dateRanges[1]
 		),
-		older: filteredConversations.filter(({ updatedAt }) => updatedAt.getTime() < dateRanges[2]),
+		older: filteredConversations.filter(({ lastActivityAt }) => lastActivityAt.getTime() < dateRanges[2]),
 	};
 </script>
 
