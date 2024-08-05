@@ -11,3 +11,29 @@
     - Navigate to another conversation
     - See a highlighted portion of the user message of the previous conversation displayed in the current conversation
 - Navigate away from a page with comment edits pending loses your work.
+- UX
+    - "New Chat" feels like it does nothing. It should create more sense of focus on the chat textbox.
+    - Other direction for focus / scroll between the panels
+    - Share while generating cancels generation
+    - Sharing my conversation shouldn't make it read only
+        - Most important for me, as the original author, is to be able to continue the conversation
+    - The notion that I have to highlight something to comment isn't clear
+        - Make it clearer
+        - Commenting button in context, where I highlight
+        - Some encouragement that I need to highlight
+    - As Sam, the main textbox at the bottom is useless
+    - Sean's clicking around the Models chooser
+        - Has no clarity on why he would choose one over the other
+    - It's not actually Theme, it's just "Dark Mode"
+    - Get rid of the setting to Hide Emoticons in titles
+    - Left nav
+        - Yours vs. Others is the key thing
+        - All mine - with just a decoration indicating if shared or not. I don't want it to "move" just because I share it
+        - Wish Public took up more space for me to explore
+    - Slack webhook when there's a new Hand Raise / Comment / Reply
+    - Signing out doesn't clear the Auth0 cookie
+    - Showcase your project
+    - Feed up-to-date relevant knowledge into the system
+        - Docs for all the tools (Auth0, Zapier, FlutterFlow)
+        - Language / Framwork docs
+    - When you hit the comment button, the focus should go to the comment textarea
