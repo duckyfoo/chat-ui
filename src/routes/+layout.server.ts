@@ -57,17 +57,57 @@ export const load: LayoutServerLoad = async ({ locals, depends }) => {
 		.find(authCondition(locals))
 		.sort({ updatedAt: -1 })
 		.project<
-			Pick<Conversation, "title" | "model" | "_id" | "updatedAt" | "createdAt" | "assistantId" | "shared">
+			Pick<
+				Conversation,
+				| "title"
+				| "model"
+				| "_id"
+				| "updatedAt"
+				| "lastActivityAt"
+				| "createdAt"
+				| "assistantId"
+				| "shared"
+			>
 		>({
 			title: 1,
 			model: 1,
 			_id: 1,
 			updatedAt: 1,
+			lastActivityAt: 1,
 			createdAt: 1,
 			assistantId: 1,
 			shared: 1,
 		})
 		.limit(300)
+		.toArray();
+
+	// similar to the above, but all public (shared) conversations regardless of the user's authCondition, sorted by lastActivityAt
+	const publicConversations = await collections.conversations
+		.find({ shared: true })
+		.sort({ lastActivityAt: -1 })
+		.project<
+			Pick<
+				Conversation,
+				| "title"
+				| "model"
+				| "_id"
+				| "updatedAt"
+				| "lastActivityAt"
+				| "createdAt"
+				| "assistantId"
+				| "shared"
+			>
+		>({
+			title: 1,
+			model: 1,
+			_id: 1,
+			updatedAt: 1,
+			lastActivityAt: 1,
+			createdAt: 1,
+			assistantId: 1,
+			shared: 1,
+		})
+		.limit(500) // Adjust the limit as needed
 		.toArray();
 
 	const userAssistants = settings?.assistants?.map((assistantId) => assistantId.toString()) ?? [];
@@ -109,6 +149,27 @@ export const load: LayoutServerLoad = async ({ locals, depends }) => {
 
 	const toolUseDuration = (await MetricsServer.getMetrics().tool.toolUseDuration.get()).values;
 	return {
+		publicConversations: publicConversations.map((conv) => {
+			if (settings?.hideEmojiOnSidebar) {
+				conv.title = conv.title.replace(/\p{Emoji}/gu, "");
+			}
+
+			// remove invalid unicode and trim whitespaces
+			conv.title = conv.title.replace(/\uFFFD/gu, "").trimStart();
+
+			return {
+				id: conv._id.toString(),
+				title: conv.title,
+				model: conv.model ?? defaultModel,
+				updatedAt: conv.updatedAt,
+				lastActivityAt: conv.lastActivityAt,
+				assistantId: conv.assistantId?.toString(),
+				avatarHash:
+					conv.assistantId &&
+					assistants.find((a) => a._id.toString() === conv.assistantId?.toString())?.avatar,
+				shared: conv.shared,
+			};
+		}) satisfies ConvSidebar[],
 		conversations: conversations.map((conv) => {
 			if (settings?.hideEmojiOnSidebar) {
 				conv.title = conv.title.replace(/\p{Emoji}/gu, "");
@@ -122,6 +183,7 @@ export const load: LayoutServerLoad = async ({ locals, depends }) => {
 				title: conv.title,
 				model: conv.model ?? defaultModel,
 				updatedAt: conv.updatedAt,
+				lastActivityAt: conv.lastActivityAt,
 				assistantId: conv.assistantId?.toString(),
 				avatarHash:
 					conv.assistantId &&
@@ -194,6 +256,7 @@ export const load: LayoutServerLoad = async ({ locals, depends }) => {
 			})),
 		user: locals.user && {
 			id: locals.user._id.toString(),
+			name: locals.user.name,
 			username: locals.user.username,
 			avatarUrl: locals.user.avatarUrl,
 			email: locals.user.email,

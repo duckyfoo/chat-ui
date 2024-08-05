@@ -144,6 +144,7 @@ export class Database {
 				{ partialFilterExpression: { userId: { $exists: true } } }
 			)
 			.catch((e) => logger.error(e));
+		conversations.createIndex({ shared: 1, lastActivityAt: -1 }).catch((e) => logger.error(e));
 		// Not strictly necessary, could use _id, but more convenient. Also for stats
 		// To do stats on conversation messages
 		conversations
@@ -214,19 +215,15 @@ export class Database {
 			.createIndex({ createdAt: 1 }, { expireAfterSeconds: 60 })
 			.catch((e) => logger.error(e));
 		// Create indexes for commentThreads
+		commentThreads.createIndex({ conversationId: 1, updatedAt: 1 }).catch((e) => logger.error(e));
+		// Create indexes for commentTheads
 		commentThreads
-			.createIndex({ conversationId: 1, updatedAt: 1 })
+			.createIndex({
+				conversationId: 1,
+				"textPositionSelector.start": 1,
+			})
 			.catch((e) => logger.error(e));
-        // Create indexes for commentTheads
-        commentThreads
-            .createIndex({ 
-                conversationId: 1, 
-                "textPositionSelector.start": 1 
-            })
-            .catch((e) => logger.error(e));
-		commentThreads
-            .createIndex({ updatedAt: -1, conversationId: 1 })
-            .catch((e) => logger.error(e));
+		commentThreads.createIndex({ updatedAt: -1, conversationId: 1 }).catch((e) => logger.error(e));
 	}
 }
 

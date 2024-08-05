@@ -27,4 +27,5 @@ export interface Conversation extends Timestamps {
 	userAgent?: string;
 
 	shared: boolean;
+	lastActivityAt: Date;
 }

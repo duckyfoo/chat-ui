@@ -205,6 +205,7 @@
 	<MobileNav isOpen={isNavOpen} on:toggle={(ev) => (isNavOpen = ev.detail)} title={mobileNavTitle}>
 		<NavMenu
 			conversations={data.conversations}
+			publicConversations={data.publicConversations}
 			user={data.user}
 			canLogin={data.user === undefined && data.loginEnabled}
 			on:shareConversation={(ev) => shareConversation(ev.detail, "Shared Item").then(() => invalidateAll())}
@@ -219,6 +220,7 @@
 	>
 		<NavMenu
 			conversations={data.conversations}
+			publicConversations={data.publicConversations}
 			user={data.user}
 			canLogin={data.user === undefined && data.loginEnabled}
 			on:shareConversation={(ev) => shareConversation(ev.detail, "Shared Item").then(() => invalidateAll())}

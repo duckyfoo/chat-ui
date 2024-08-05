@@ -101,6 +101,7 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 		messages[0].content = values.preprompt;
 	}
 
+	const now = new Date();
 	const res = await collections.conversations.insertOne({
 		_id: new ObjectId(),
 		title: title || "New Chat",
@@ -109,8 +110,9 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 		model: values.model,
 		preprompt: values.preprompt,
 		assistantId: values.assistantId ? new ObjectId(values.assistantId) : undefined,
-		createdAt: new Date(),
-		updatedAt: new Date(),
+		createdAt: now,
+		updatedAt: now,
+		lastActivityAt: now,
 		userAgent: request.headers.get("User-Agent") ?? undefined,
 		embeddingModel,
 		shared: values.shared,

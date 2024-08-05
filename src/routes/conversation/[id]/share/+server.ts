@@ -21,7 +21,7 @@ export async function POST({ params, url, locals }) {
 	// Update the conversation to set shared to true
 	await collections.conversations.updateOne(
 		{ _id: new ObjectId(params.id), ...authCondition(locals) },
-		{ $set: { shared: true } }
+		{ $set: { shared: true, lastActivityAt: new Date() } }
 	);
 
 	const hash = await hashConv(conversation);

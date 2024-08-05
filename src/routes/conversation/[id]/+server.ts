@@ -305,7 +305,14 @@ export async function POST({ request, locals, params, getClientAddress }) {
 	// update the conversation with the new messages
 	await collections.conversations.updateOne(
 		{ _id: convId },
-		{ $set: { messages: conv.messages, title: conv.title, updatedAt: new Date() } }
+		{
+			$set: {
+				messages: conv.messages,
+				title: conv.title,
+				updatedAt: new Date(),
+				lastActivityAt: new Date(),
+			},
+		}
 	);
 
 	let doneStreaming = false;
@@ -351,7 +358,7 @@ export async function POST({ request, locals, params, getClientAddress }) {
 					conv.title = event.title;
 					await collections.conversations.updateOne(
 						{ _id: convId },
-						{ $set: { title: conv?.title, updatedAt: new Date() } }
+						{ $set: { title: conv?.title, updatedAt: new Date(), lastActivityAt: new Date() } }
 					);
 				}
 
@@ -398,7 +405,7 @@ export async function POST({ request, locals, params, getClientAddress }) {
 
 			await collections.conversations.updateOne(
 				{ _id: convId },
-				{ $set: { title: conv.title, updatedAt: new Date() } }
+				{ $set: { title: conv.title, updatedAt: new Date(), lastActivityAt: new Date() } }
 			);
 			messageToWriteTo.updatedAt = new Date();
 
@@ -441,7 +448,14 @@ export async function POST({ request, locals, params, getClientAddress }) {
 
 			await collections.conversations.updateOne(
 				{ _id: convId },
-				{ $set: { messages: conv.messages, title: conv?.title, updatedAt: new Date() } }
+				{
+					$set: {
+						messages: conv.messages,
+						title: conv?.title,
+						updatedAt: new Date(),
+						lastActivityAt: new Date(),
+					},
+				}
 			);
 
 			// used to detect if cancel() is called bc of interrupt or just because the connection closes
@@ -453,7 +467,14 @@ export async function POST({ request, locals, params, getClientAddress }) {
 			if (doneStreaming) return;
 			await collections.conversations.updateOne(
 				{ _id: convId },
-				{ $set: { messages: conv.messages, title: conv.title, updatedAt: new Date() } }
+				{
+					$set: {
+						messages: conv.messages,
+						title: conv.title,
+						updatedAt: new Date(),
+						lastActivityAt: new Date(),
+					},
+				}
 			);
 		},
 	});

@@ -13,6 +13,7 @@
 	import { page } from "$app/stores";
 
 	export let conversations: ConvSidebar[] = [];
+	export let publicConversations: ConvSidebar[] = [];
 	export let canLogin: boolean;
 	export let user: LayoutData["user"];
 	export let currentConversationId: string | null = null;
@@ -43,9 +44,10 @@
 		activeTab.set(currentConversation.shared ? 'shared' : 'private');
 	}
 	
-	$: filteredConversations = $activeTab === 'private'
-    ? conversations.filter(({ shared }) => !shared)
-    : conversations.filter(({ shared }) => shared);
+	$: filteredConversations = 
+		$activeTab === 'private' ? conversations.filter(({ shared }) => !shared) :
+		$activeTab === 'shared' ? conversations.filter(({ shared }) => shared) :
+		publicConversations;
 	
 	$: groupedConversations = {
 		today: filteredConversations.filter(({ updatedAt }) => updatedAt.getTime() > dateRanges[0]),
@@ -90,6 +92,12 @@
         >
             Shared
         </button>
+		<button
+			class="px-3 h-full text-sm font-medium rounded-r-md {$activeTab === 'public' ? 'bg-gray-100 dark:bg-gray-700' : ''}"
+			on:click={() => activeTab.set('public')}
+		>
+			Public
+		</button>
     </div>
 </div>
 <div
