@@ -1,0 +1,10 @@
+services:
+  chat-ui:
+    image: jakelevirne/duckyfoo-chat:latest
+    container_name: chat-ui
+    ports:
+      - "80:3000"  # Map port 80 on the host to port 3000 in the container
+    restart: unless-stopped
+    volumes:
+      - ./.env.production:/app/.env.local # the entrypoint.sh file is explicitly looking for /app/.env.local
+      
