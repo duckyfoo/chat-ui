@@ -46,8 +46,7 @@
 		activeTab.set('public');
 	}
 	
-	$: filteredConversations = 
-		$activeTab === 'mine' ? conversations : publicConversations;
+	$: filteredConversations = conversations;
 	
 	$: groupedConversations = {
 		today: filteredConversations.filter(({ lastActivityAt }) => lastActivityAt.getTime() > dateRanges[0]),
@@ -61,39 +60,7 @@
 	};
 </script>
 
-<div class="sticky top-0 flex flex-none items-center justify-between px-3 py-3.5 max-sm:pt-0">
-	<a
-		class="flex items-center rounded-xl text-lg font-semibold"
-		href="{envPublic.PUBLIC_ORIGIN}{base}/"
-	>
-		<Logo classNames="mr-1" />
-		{envPublic.PUBLIC_APP_NAME}
-	</a>
-	<a
-		href={`${base}/`}
-		on:click={handleNewChatClick}
-		class="flex rounded-lg border bg-white px-2 py-0.5 text-center shadow-sm hover:shadow-none sm:text-smd dark:border-gray-600 dark:bg-gray-700"
-	>
-		New Question
-	</a>
-</div>
-<!-- Tab switcher -->
-<div class="flex justify-center h-8 mb-2">
-    <div class="inline-flex rounded-md border border-gray-200 dark:border-gray-700 h-full">
-        <button
-            class="px-3 h-full text-sm font-medium rounded-l-md {$activeTab === 'mine' ? 'bg-gray-100 dark:bg-gray-700' : ''}"
-            on:click={() => activeTab.set('mine')}
-        >
-            Mine
-        </button>
-		<button
-			class="px-3 h-full text-sm font-medium rounded-r-md {$activeTab === 'public' ? 'bg-gray-100 dark:bg-gray-700' : ''}"
-			on:click={() => activeTab.set('public')}
-		>
-			Public
-		</button>
-    </div>
-</div>
+
 <div
 	class="scrollbar-custom flex flex-col gap-1 overflow-y-auto rounded-r-xl from-gray-50 px-3 pb-3 pt-2 text-[.9rem] max-sm:bg-gradient-to-t md:bg-gradient-to-l dark:from-gray-800/30"
 >

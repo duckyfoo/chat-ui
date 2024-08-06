@@ -1,5 +1,7 @@
 <script lang="ts">
 	import "../styles/main.css";
+	import Logo from "$lib/components/icons/Logo.svelte";
+	import { isAborted } from "$lib/stores/isAborted";
 
 	import { onDestroy } from "svelte";
 	import { goto, invalidate, invalidateAll } from "$app/navigation";
@@ -128,6 +130,10 @@
 	$: mobileNavTitle = ["/models", "/assistants", "/privacy"].includes($page.route.id ?? "")
 		? ""
 		: data.conversations.find((conv) => conv.id === $page.params.id)?.title;
+
+	function handleNewChatClick() {
+		isAborted.set(true);
+	}
 </script>
 
 <svelte:head>
@@ -202,6 +208,24 @@
 		? 'md:grid-cols-[280px,1fr,460px]'
 		: 'md:grid-cols-[0px,1fr,460px]'} transition-[300ms] [transition-property:grid-template-columns] md:grid-rows-[1fr] dark:text-gray-300"
 >
+	<header class="col-span-full bg-gray-100 dark:bg-gray-800 py-2 px-4 text-lg font-bold shadow-md mb-1">
+		<div class="sticky top-0 flex flex-none items-center px-3 py-3.5 max-sm:pt-0 space-x-5">
+			<a
+				class="flex items-center rounded-xl text-lg font-semibold"
+				href="{envPublic.PUBLIC_ORIGIN}{base}/"
+			>
+				<Logo classNames="mr-1" />
+				{envPublic.PUBLIC_APP_NAME}
+			</a>
+			<a
+				href={`${base}/conversation`}
+				on:click={handleNewChatClick}
+				class="flex rounded-lg border bg-white px-2 py-0.5 text-center shadow-sm hover:shadow-none sm:text-smd dark:border-gray-600 dark:bg-gray-700"
+			>
+				New Question
+			</a>
+		</div>
+	</header>
 	<MobileNav isOpen={isNavOpen} on:toggle={(ev) => (isNavOpen = ev.detail)} title={mobileNavTitle}>
 		<NavMenu
 			conversations={data.conversations}
