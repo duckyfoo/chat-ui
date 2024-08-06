@@ -38,18 +38,16 @@
 	
 	const nModels: number = $page.data.models.filter((el: Model) => !el.unlisted).length;
 	
-	const activeTab = writable('private');
+	const activeTab = writable('mine');
 	$: currentConversation = conversations.find(conv => conv.id === currentConversationId);
-	$: if (currentConversation) {
-		activeTab.set(currentConversation.shared ? 'shared' : 'private');
+	$: if (currentConversation || currentConversationId === null) {
+		activeTab.set('mine');
 	} else {
 		activeTab.set('public');
 	}
 	
 	$: filteredConversations = 
-		$activeTab === 'private' ? conversations.filter(({ shared }) => !shared) :
-		$activeTab === 'shared' ? conversations.filter(({ shared }) => shared) :
-		publicConversations;
+		$activeTab === 'mine' ? conversations : publicConversations;
 	
 	$: groupedConversations = {
 		today: filteredConversations.filter(({ lastActivityAt }) => lastActivityAt.getTime() > dateRanges[0]),
@@ -76,23 +74,17 @@
 		on:click={handleNewChatClick}
 		class="flex rounded-lg border bg-white px-2 py-0.5 text-center shadow-sm hover:shadow-none sm:text-smd dark:border-gray-600 dark:bg-gray-700"
 	>
-		New Chat
+		New Question
 	</a>
 </div>
 <!-- Tab switcher -->
 <div class="flex justify-center h-8 mb-2">
     <div class="inline-flex rounded-md border border-gray-200 dark:border-gray-700 h-full">
         <button
-            class="px-3 h-full text-sm font-medium rounded-l-md {$activeTab === 'private' ? 'bg-gray-100 dark:bg-gray-700' : ''}"
-            on:click={() => activeTab.set('private')}
+            class="px-3 h-full text-sm font-medium rounded-l-md {$activeTab === 'mine' ? 'bg-gray-100 dark:bg-gray-700' : ''}"
+            on:click={() => activeTab.set('mine')}
         >
-            Private
-        </button>
-        <button
-            class="px-3 h-full text-sm font-medium rounded-r-md {$activeTab === 'shared' ? 'bg-gray-100 dark:bg-gray-700' : ''}"
-            on:click={() => activeTab.set('shared')}
-        >
-            Shared
+            Mine
         </button>
 		<button
 			class="px-3 h-full text-sm font-medium rounded-r-md {$activeTab === 'public' ? 'bg-gray-100 dark:bg-gray-700' : ''}"
