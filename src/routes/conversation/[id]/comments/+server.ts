@@ -209,7 +209,7 @@ export async function GET({ params, locals }) {
 												],
 											},
 										},
-										in: "$$user.name",
+										in: "$$user.username",
 									},
 								},
 							},

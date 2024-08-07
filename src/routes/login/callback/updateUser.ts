@@ -108,12 +108,55 @@ export async function updateUser(params: {
 
 	locals.sessionId = sessionId;
 
+	// If the user is not existing or if they are existing but have no username, we need to create a unique username string for them
+	// we'll use this username string later in the code below
+
+	let newUsername = "";
+	if ((!existingUser || (existingUser && !existingUser.username)) && email) {
+		const baseUsername = email
+			.split("@")[0]
+			.toLowerCase()
+			.replace(/[^a-z0-9]/g, "");
+
+		for (let attempt = 0; attempt < 5; attempt++) {
+			newUsername =
+				attempt === 0 ? baseUsername : `${baseUsername}${Math.floor(1000 + Math.random() * 9000)}`;
+
+			const existingUserWithUsername = await collections.users.findOne({ username: newUsername });
+
+			if (!existingUserWithUsername) {
+				break;
+			}
+
+			if (attempt === 4) {
+				newUsername = crypto.randomUUID();
+			}
+		}
+	}
+
 	if (existingUser) {
 		// update existing user if any
-		await collections.users.updateOne(
-			{ _id: existingUser._id },
-			{ $set: { username, name, avatarUrl, isAdmin, isEarlyAccess } }
-		);
+		// Prepare the update object
+		const updateSet: {
+			name: string;
+			avatarUrl?: string;
+			isAdmin: boolean;
+			isEarlyAccess: boolean;
+			username?: string;
+		} = {
+			name,
+			avatarUrl,
+			isAdmin,
+			isEarlyAccess,
+		};
+
+		// Set username only if it's not already defined in the database
+		if (!existingUser.username) {
+			updateSet.username = newUsername;
+		}
+
+		// Update existing user
+		await collections.users.updateOne({ _id: existingUser._id }, { $set: updateSet });
 
 		// remove previous session if it exists and add new one
 		await collections.sessions.deleteOne({ sessionId: previousSessionId });
@@ -133,7 +176,7 @@ export async function updateUser(params: {
 			_id: new ObjectId(),
 			createdAt: new Date(),
 			updatedAt: new Date(),
-			username,
+			username: newUsername,
 			name,
 			email,
 			avatarUrl,

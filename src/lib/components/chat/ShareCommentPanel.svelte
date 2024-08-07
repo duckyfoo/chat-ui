@@ -169,7 +169,7 @@
                         _id: null,
                         content: "",
                         originalContent: "",
-                        username: $page.data.user?.name || $page.data.user?.email || 'Anonymous',
+                        username: $page.data.user?.username || $page.data.user?.email || 'Anonymous',
                         isPending: true,
                         updatedAt: new Date(),
 						createdAt: new Date(),
@@ -391,7 +391,7 @@
                         comments: [...thread.comments, {
                             _id: result.id,
                             content: displayCommentThread.replyText || '', // Ensure content is always a string
-                            username: $page.data.user?.name || $page.data.user?.email || 'Anonymous',
+                            username: $page.data.user?.username || $page.data.user?.email || 'Anonymous',
                             isPending: false,
                             updatedAt: new Date(),
                             createdAt: new Date(),
