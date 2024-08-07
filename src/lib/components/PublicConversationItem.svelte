@@ -23,6 +23,8 @@
 			<div class="flex justify-between items-center">
 				<p class="text-sm text-gray-600 font-semibold">{conv.title}</p>
 				<p class="text-xs text-gray-500">
+					{conv.username}
+					· 
 					{conv.commentCount} comment{conv.commentCount !== 1 ? 's' : ''}
 					{#if (conv.commentThreadCount ?? 0) > 0}
 						in {conv.commentThreadCount} thread{conv.commentThreadCount !== 1 ? 's' : ''}
@@ -32,6 +34,7 @@
 				</p>
 			</div>
 			<p>{conv.excerpt}</p>
+
 
 		</div>
 	</div>

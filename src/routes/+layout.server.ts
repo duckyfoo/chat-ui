@@ -10,6 +10,7 @@ import { ObjectId } from "mongodb";
 import type { ConvSidebar } from "$lib/types/ConvSidebar";
 import { allTools } from "$lib/server/tools";
 import { MetricsServer } from "$lib/server/metrics";
+import { User } from "$lib/types/User";
 
 export const load: LayoutServerLoad = async ({ locals, depends }) => {
 	depends(UrlDependency.ConversationList);
@@ -97,6 +98,7 @@ export const load: LayoutServerLoad = async ({ locals, depends }) => {
 				| "assistantId"
 				| "shared"
 				| "messages"
+				| "userId"
 			>
 		>({
 			title: 1,
@@ -108,6 +110,7 @@ export const load: LayoutServerLoad = async ({ locals, depends }) => {
 			assistantId: 1,
 			shared: 1,
 			messages: { $slice: ["$messages", 2] },
+			userId: 1,
 		})
 		.limit(500) // Adjust the limit as needed
 		.toArray();
@@ -166,6 +169,15 @@ export const load: LayoutServerLoad = async ({ locals, depends }) => {
 	const commentCountMap = new Map(commentCounts.map((item) => [item._id.toString(), item]));
 
 	const toolUseDuration = (await MetricsServer.getMetrics().tool.toolUseDuration.get()).values;
+
+	// Fetch usernames for all conversations
+	const userIds = publicConversations.map((conv) => conv.userId).filter((id) => id) as ObjectId[];
+	const users = await collections.users
+		.find({ _id: { $in: userIds } })
+		.project<Pick<User, "_id" | "username">>({ _id: 1, username: 1 })
+		.toArray();
+	const userMap = new Map(users.map((user) => [user._id.toString(), user.username]));
+
 	return {
 		publicConversations: publicConversations.map((conv) => {
 			if (settings?.hideEmojiOnSidebar) {
@@ -197,7 +209,7 @@ export const load: LayoutServerLoad = async ({ locals, depends }) => {
 				excerpt,
 				commentThreadCount: commentData.commentThreadCount,
 				commentCount: commentData.commentCount,
-				//username
+				username: conv.userId ? userMap.get(conv.userId.toString()) : undefined,
 			};
 		}) satisfies ConvSidebar[],
 		conversations: conversations.map((conv) => {
