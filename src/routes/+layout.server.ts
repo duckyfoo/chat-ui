@@ -148,6 +148,22 @@ export const load: LayoutServerLoad = async ({ locals, depends }) => {
 			loginRequired = totalMessages > messagesBeforeLogin;
 		}
 	}
+	// Query to get comment counts for each conversation
+	const commentCounts = await collections.commentThreads
+		.aggregate([
+			{ $match: { conversationId: { $in: publicConversations.map((conv) => conv._id) } } },
+			{
+				$group: {
+					_id: "$conversationId",
+					commentThreadCount: { $sum: 1 },
+					commentCount: { $sum: { $size: "$comments" } },
+				},
+			},
+		])
+		.toArray();
+
+	// Create a Map for easy lookup
+	const commentCountMap = new Map(commentCounts.map((item) => [item._id.toString(), item]));
 
 	const toolUseDuration = (await MetricsServer.getMetrics().tool.toolUseDuration.get()).values;
 	return {
@@ -162,6 +178,11 @@ export const load: LayoutServerLoad = async ({ locals, depends }) => {
 			// Extract excerpt from the second message (index 1) if it exists
 			const excerpt = conv.messages[1]?.content.slice(0, 1000) || "";
 
+			const commentData = commentCountMap.get(conv._id.toString()) || {
+				commentThreadCount: 0,
+				commentCount: 0,
+			};
+
 			return {
 				id: conv._id.toString(),
 				title: conv.title,
@@ -174,6 +195,9 @@ export const load: LayoutServerLoad = async ({ locals, depends }) => {
 					assistants.find((a) => a._id.toString() === conv.assistantId?.toString())?.avatar,
 				shared: conv.shared,
 				excerpt,
+				commentThreadCount: commentData.commentThreadCount,
+				commentCount: commentData.commentCount,
+				//username
 			};
 		}) satisfies ConvSidebar[],
 		conversations: conversations.map((conv) => {

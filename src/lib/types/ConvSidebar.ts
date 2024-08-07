@@ -8,4 +8,7 @@ export interface ConvSidebar {
 	avatarHash?: string;
 	shared: boolean;
 	excerpt?: string;
+	commentThreadCount?: number;
+	commentCount?: number;
+	username?: string;
 }
