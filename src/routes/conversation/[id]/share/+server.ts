@@ -6,6 +6,7 @@ import { hashConv } from "$lib/utils/hashConv";
 import { error } from "@sveltejs/kit";
 import { ObjectId } from "mongodb";
 import { nanoid } from "nanoid";
+import { SLACK_WEBHOOK_URL } from "$env/static/private";
 
 export async function POST({ params, url, locals }) {
 	// TODO: seems like this should be a PUT rather than a POST since it's an update
@@ -52,6 +53,23 @@ export async function POST({ params, url, locals }) {
 	};
 
 	await collections.sharedConversations.insertOne(shared);
+
+	// Send notification to Slack
+	if (SLACK_WEBHOOK_URL) {
+		try {
+			await fetch(SLACK_WEBHOOK_URL, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					text: `<${getShareUrl(url, conversation._id.toString())}|${conversation.title}>`,
+				}),
+			});
+		} catch (error) {
+			console.error("Failed to send Slack notification:", error);
+		}
+	}
 
 	// copy files from `${conversation._id}-` to `${shared._id}-`
 	const files = await collections.bucket
