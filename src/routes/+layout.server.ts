@@ -96,6 +96,7 @@ export const load: LayoutServerLoad = async ({ locals, depends }) => {
 				| "createdAt"
 				| "assistantId"
 				| "shared"
+				| "messages"
 			>
 		>({
 			title: 1,
@@ -106,6 +107,7 @@ export const load: LayoutServerLoad = async ({ locals, depends }) => {
 			createdAt: 1,
 			assistantId: 1,
 			shared: 1,
+			messages: { $slice: ["$messages", 2] },
 		})
 		.limit(500) // Adjust the limit as needed
 		.toArray();
@@ -157,6 +159,9 @@ export const load: LayoutServerLoad = async ({ locals, depends }) => {
 			// remove invalid unicode and trim whitespaces
 			conv.title = conv.title.replace(/\uFFFD/gu, "").trimStart();
 
+			// Extract excerpt from the second message (index 1) if it exists
+			const excerpt = conv.messages[1]?.content.slice(0, 1000) || "";
+
 			return {
 				id: conv._id.toString(),
 				title: conv.title,
@@ -168,6 +173,7 @@ export const load: LayoutServerLoad = async ({ locals, depends }) => {
 					conv.assistantId &&
 					assistants.find((a) => a._id.toString() === conv.assistantId?.toString())?.avatar,
 				shared: conv.shared,
+				excerpt,
 			};
 		}) satisfies ConvSidebar[],
 		conversations: conversations.map((conv) => {

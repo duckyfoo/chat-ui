@@ -20,10 +20,13 @@
 >
 	<div class="w-full p-2 bg-white rounded">
 		<div class="flex flex-col">
-			<p class="text-sm text-gray-600 font-semibold">{conv.title}</p>
-			<p class="text-xs text-gray-500 mt-1">
-				Last Activity: {new Date(conv.lastActivityAt).toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })}
-			</p>
+			<div class="flex justify-between items-center">
+				<p class="text-sm text-gray-600 font-semibold">{conv.title}</p>
+				<p class="text-xs text-gray-500">
+					{new Date(conv.lastActivityAt).toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })}
+				</p>
+			</div>
+			<p>{conv.excerpt}</p>
 		</div>
 	</div>
 </a>

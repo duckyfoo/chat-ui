@@ -30,9 +30,9 @@
 
 
 	const titles: { [key: string]: string } = {
-		today: "Today",
-		week: "This week",
-		month: "This month",
+		today: "Past day",
+		week: "Past week",
+		month: "Past month",
 		older: "Older",
 	} as const;
 	
@@ -62,8 +62,9 @@
 
 
 <div
-	class="scrollbar-custom flex flex-col gap-1 overflow-y-auto rounded-r-xl from-gray-50 px-3 pb-3 pt-2 text-[.9rem] max-sm:bg-gradient-to-t md:bg-gradient-to-l dark:from-gray-800/30"
+	class="scrollbar-custom flex flex-col gap-1 overflow-y-auto rounded-r-xl from-gray-50 px-3 pb-3 pt-2 text-[.9rem] max-sm:bg-gradient-to-t md:bg-gradient-to-l dark:from-gray-800/30 min-h-[73vh]"
 >
+	<h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2 mt-1">My Questions</h3>
 	{#each Object.entries(groupedConversations) as [group, convs]}
 		{#if convs.length}
 			<h4 class="mb-1.5 mt-4 pl-0.5 text-sm text-gray-400 first:mt-0 dark:text-gray-500">

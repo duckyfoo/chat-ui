@@ -240,7 +240,7 @@
 		/>
 	</MobileNav>
 	<nav
-		class=" grid max-h-screen grid-cols-1 grid-rows-[auto,auto,1fr,auto] overflow-hidden *:w-[280px] max-md:hidden"
+		class="grid max-h-screen grid-cols-1 grid-rows-[auto,auto,1fr,auto] overflow-hidden *:w-[280px] max-md:hidden"
 	>
 		<NavMenu
 			conversations={data.conversations}

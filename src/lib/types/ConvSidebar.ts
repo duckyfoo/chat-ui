@@ -7,4 +7,5 @@ export interface ConvSidebar {
 	assistantId?: string;
 	avatarHash?: string;
 	shared: boolean;
+	excerpt?: string;
 }

@@ -1,8 +1,6 @@
 <script lang="ts">
-	import { base } from "$app/paths";
 
 	import { writable } from 'svelte/store'; 
-	import { env as envPublic } from "$env/dynamic/public";
 	import PublicConversationItem from "./PublicConversationItem.svelte";
 	import type { LayoutData } from "../../routes/$types";
 	import type { ConvSidebar } from "$lib/types/ConvSidebar";
@@ -21,9 +19,9 @@
 
 
 	const titles: { [key: string]: string } = {
-		today: "Today",
-		week: "This week",
-		month: "This month",
+		today: "Past day",
+		week: "Past week",
+		month: "Past month",
 		older: "Older",
 	} as const;
 	
@@ -45,6 +43,7 @@
 	<div class="scrollbar-custom mr-1 h-full overflow-y-auto">
 		
 <!-- Tab switcher -->
+<!--
 <div class="flex justify-center h-8 mb-2">
     <div class="inline-flex rounded-md border border-gray-200 dark:border-gray-700 h-full">
         <button
@@ -61,10 +60,11 @@
 		</button>
     </div>
 </div>
-
+-->
 <div
 	class="scrollbar-custom flex flex-col gap-3 overflow-y-auto rounded-r-xl px-3 pb-3 pt-2 text-[.9rem]"
 >
+	<h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2 mt-1">All Questions</h3>
 	{#each Object.entries(groupedConversations) as [group, convs]}
 		{#if convs.length}
 			<h4 class="mb-1.5 mt-4 pl-0.5 text-sm text-gray-400 first:mt-0 dark:text-gray-500">

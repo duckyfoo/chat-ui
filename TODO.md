@@ -37,3 +37,4 @@
         - Docs for all the tools (Auth0, Zapier, FlutterFlow)
         - Language / Framwork docs
     - When you hit the comment button, the focus should go to the comment textarea
+- Should be able to delete a comment I authored even if it's on a question I didn't ask
