@@ -413,7 +413,7 @@
 
 </script>
 
-<div class="col-start-3 col-end-4 flex flex-col h-full overflow-y-auto">
+<div class="flex flex-col h-full overflow-y-auto min-w-[400px] max-w-[460px]">
     <div class="flex flex-col items-center p-4">
         {#if conversationStarted && !shared}
         <button

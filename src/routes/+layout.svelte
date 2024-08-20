@@ -205,8 +205,8 @@
 
 <div
 	class="grid h-full w-screen grid-cols-1 grid-rows-[auto,1fr] overflow-hidden text-smd {!isNavCollapsed
-		? 'md:grid-cols-[280px,1fr,460px]'
-		: 'md:grid-cols-[0px,1fr,460px]'} transition-[300ms] [transition-property:grid-template-columns] md:grid-rows-[1fr] dark:text-gray-300"
+		? 'md:grid-cols-[280px,1fr,auto]'
+		: 'md:grid-cols-[0px,1fr,auto]'} transition-[300ms] [transition-property:grid-template-columns] md:grid-rows-[1fr] dark:text-gray-300"
 >
 	<header class="col-span-full bg-gray-100 dark:bg-gray-800 py-2 px-4 text-lg font-bold shadow-md mb-1">
 		<div class="sticky top-0 flex flex-none items-center px-3 py-3.5 max-sm:pt-0 space-x-5">
